@@ -314,7 +314,7 @@ class _CadastroScreenState extends State<CadastroScreen> {
                     children: [
                       Signature(
                         controller: _signatureController,
-                        height: 150,
+                        height: 110,
                         backgroundColor: Colors.white,
                       ),
                       Align(

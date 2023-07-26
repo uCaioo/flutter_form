@@ -1,5 +1,11 @@
 import 'package:flutter/material.dart';
 import 'dart:typed_data';
+import 'package:pdf/pdf.dart';
+import 'package:pdf/widgets.dart' as pw;
+import 'package:open_file/open_file.dart';
+import 'package:path_provider/path_provider.dart';
+import 'dart:io';
+import 'package:flutter/services.dart' show rootBundle;
 
 class ConfirmacaoScreen extends StatelessWidget {
   final String emissor;
@@ -26,175 +32,305 @@ class ConfirmacaoScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Confirmação de Cadastro', style: TextStyle(fontFamily: 'Arial', fontSize: 18)),
+        title: Text('Confirmação de Cadastro'),
+        backgroundColor: Color(0xFF43AD59),
       ),
-      body: Center(
+      body: Container(
+        color: Color(0xFF202F58), // Cor de fundo para cobrir o espaço em branco
         child: SingleChildScrollView(
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Image.asset('assets/images/Sead_Sup.png', height: 80, fit: BoxFit.contain), // Cabeçalho
-              Container(
-                padding: EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text(
-                      'Responsabilidade de Cartões',
-                      style: TextStyle(
-                        fontFamily: 'Arial',
-                        fontSize: 18.0,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                    SizedBox(height: 24.0),
-                    Text(
-                      'Emissor: $emissor',
-                      style: TextStyle(
-                        fontFamily: 'Arial',
-                        fontSize: 14.0,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                    Text(
-                      'Para: $para',
-                      style: TextStyle(
-                        fontFamily: 'Arial',
-                        fontSize: 14.0,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                    Text(
-                      'Unidade Recebedora: $unidadeRecebedora',
-                      style: TextStyle(
-                        fontFamily: 'Arial',
-                        fontSize: 14.0,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                    Text(
-                      'Cidade: $cidade',
-                      style: TextStyle(
-                        fontFamily: 'Arial',
-                        fontSize: 14.0,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                    Text(
-                      'Nome do Responsável: $nomeResponsavel',
-                      style: TextStyle(
-                        fontFamily: 'Arial',
-                        fontSize: 14.0,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                    Text(
-                      'Matrícula: $matricula',
-                      style: TextStyle(
-                        fontFamily: 'Arial',
-                        fontSize: 14.0,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                    SizedBox(height: 24.0),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          'Assinatura:',
-                          style: TextStyle(
-                            fontFamily: 'Arial',
-                            fontSize: 14.0,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        SizedBox(width: 16.0),
-                        Container(
-                          width: 140,
-                          height: 40, // Definindo uma altura menor para a imagem da assinatura
-                          child: Image.memory(assinatura, fit: BoxFit.cover), // Imagem da assinatura
-                        ),
-                      ],
-                    ),
-                    Container(
-                      height: 1,
-                      color: Colors.black, // Linha abaixo da imagem da assinatura
-                      margin: EdgeInsets.symmetric(vertical: 4.0),
-                    ),
-                    SizedBox(height: 20.0),
-                    Text(
-                      'Dados do Veículo',
-                      style: TextStyle(
-                        fontFamily: 'Arial',
-                        fontSize: 18.0,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                    for (var veiculo in veiculos)
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          SizedBox(height: 12.0),
-                          Text(
-                            'Placa do Veículo: ${veiculo['placa']}',
-                            style: TextStyle(
-                              fontFamily: 'Arial',
-                              fontSize: 14.0,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          Text(
-                            'Modelo do Veículo: ${veiculo['modelo']}',
-                            style: TextStyle(
-                              fontFamily: 'Arial',
-                              fontSize: 14.0,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          Text(
-                            'Cota: ${veiculo['cota']}',
-                            style: TextStyle(
-                              fontFamily: 'Arial',
-                              fontSize: 14.0,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          Text(
-                            'Combustível: ${veiculo['combustivel']}',
-                            style: TextStyle(
-                              fontFamily: 'Arial',
-                              fontSize: 14.0,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          Text(
-                            'Documento: ${veiculo['documento']}',
-                            style: TextStyle(
-                              fontFamily: 'Arial',
-                              fontSize: 14.0,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          SizedBox(height: 16.0),
-                        ],
-                      ),
-                  ],
+              // Cabeçalho com imagem dentro do container
+              FractionallySizedBox(
+                widthFactor: 0.9,
+                child: Container(
+                  color: Colors.white,
+                  padding: EdgeInsets.all(20.0),
+                  child: Image.asset('assets/images/Sead_Sup.png', fit: BoxFit.contain),
                 ),
               ),
-              Image.asset('assets/images/Sead_inf.png', height: 80, fit: BoxFit.contain), // Rodapé
+              // Corpo do formulário centralizado
+              FractionallySizedBox(
+                widthFactor: 0.9,
+                child: Container(
+                  color: Colors.white,
+                  padding: EdgeInsets.all(20.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Responsabilidade dos Cartões',
+                        style: TextStyle(
+                          fontFamily: 'Arial',
+                          fontSize: 20.0,
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        textAlign: TextAlign.left, // Alinha o texto à esquerda
+                      ),
+                      SizedBox(height: 16.0),
+                      Text(
+                        'Emissor: $emissor',
+                        style: TextStyle(
+                          fontFamily: 'Arial',
+                          fontSize: 16.0,
+                        ),
+                        textAlign: TextAlign.left, // Alinha o texto à esquerda
+                      ),
+                      Text(
+                        'Para: $para',
+                        style: TextStyle(
+                          fontFamily: 'Arial',
+                          fontSize: 16.0,
+                        ),
+                        textAlign: TextAlign.left, // Alinha o texto à esquerda
+                      ),
+                      Text(
+                        'Unidade Recebedora: $unidadeRecebedora',
+                        style: TextStyle(
+                          fontFamily: 'Arial',
+                          fontSize: 16.0,
+                        ),
+                        textAlign: TextAlign.left, // Alinha o texto à esquerda
+                      ),
+                      Text(
+                        'Cidade: $cidade',
+                        style: TextStyle(
+                          fontFamily: 'Arial',
+                          fontSize: 16.0,
+                        ),
+                        textAlign: TextAlign.left, // Alinha o texto à esquerda
+                      ),
+                      Text(
+                        'Nome do Responsável: $nomeResponsavel',
+                        style: TextStyle(
+                          fontFamily: 'Arial',
+                          fontSize: 16.0,
+                        ),
+                        textAlign: TextAlign.left, // Alinha o texto à esquerda
+                      ),
+                      Text(
+                        'Matrícula: $matricula',
+                        style: TextStyle(
+                          fontFamily: 'Arial',
+                          fontSize: 16.0,
+                        ),
+                        textAlign: TextAlign.left, // Alinha o texto à esquerda
+                      ),
+                      SizedBox(height: 16.0),
+                      Text(
+                        'Assinatura:',
+                        style: TextStyle(
+                          fontFamily: 'Arial',
+                          fontSize: 16.0,
+                        ),
+                        textAlign: TextAlign.left, // Alinha o texto à esquerda
+                      ),
+                      SizedBox(height: 5.0),
+                      Container(
+                        width: 100,
+                        height: 80,
+                        child: Image.memory(assinatura, fit: BoxFit.contain),
+                      ),
+                      SizedBox(height: 16.0),
+                      Text(
+                        'Dados do Veículo:',
+                        style: TextStyle(
+                          fontFamily: 'Arial',
+                          fontSize: 20.0,
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        textAlign: TextAlign.left, // Alinha o texto à esquerda
+                      ),
+                      SizedBox(height: 10.0),
+                      for (var i = 0; i < veiculos.length; i++)
+                        Card(
+                          margin: EdgeInsets.symmetric(vertical: 8.0),
+                          elevation: 2,
+                          child: Container(
+                            padding: EdgeInsets.all(16.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Veículo ${i + 1}:',
+                                  style: TextStyle(
+                                    fontFamily: 'Arial',
+                                    fontSize: 18.0,
+                                    fontWeight: FontWeight.bold,
+                                    color: Color(0xFF43AD59),
+                                  ),
+                                ),
+                                SizedBox(height: 8.0),
+                                Text(
+                                  'Placa: ${veiculos[i]['placa']}',
+                                  style: TextStyle(
+                                    fontFamily: 'Arial',
+                                    fontSize: 16.0,
+                                  ),
+                                ),
+                                Text(
+                                  'Modelo: ${veiculos[i]['modelo']}',
+                                  style: TextStyle(
+                                    fontFamily: 'Arial',
+                                    fontSize: 16.0,
+                                  ),
+                                ),
+                                Text(
+                                  'Cota: ${veiculos[i]['cota']}',
+                                  style: TextStyle(
+                                    fontFamily: 'Arial',
+                                    fontSize: 16.0,
+                                  ),
+                                ),
+                                Text(
+                                  'Combustível: ${veiculos[i]['combustivel']}',
+                                  style: TextStyle(
+                                    fontFamily: 'Arial',
+                                    fontSize: 16.0,
+                                  ),
+                                ),
+                                Text(
+                                  'Documento: ${veiculos[i]['documento']}',
+                                  style: TextStyle(
+                                    fontFamily: 'Arial',
+                                    fontSize: 16.0,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      // Botão "Finalizar Cadastro"
+                      Center(
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: ElevatedButton(
+                            onPressed: _gerarPDF, // Chama a função para gerar o PDF
+                            child: Text(
+                              'Finalizar Cadastro',
+                              style: TextStyle(
+                                fontFamily: 'Arial',
+                                fontSize: 18.0,
+                              ),
+                            ),
+                            style: ElevatedButton.styleFrom(
+                              primary: Color(0xFF43AD59), // Cor do botão
+                              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              // Rodapé com imagem dentro do container
+              FractionallySizedBox(
+                widthFactor: 0.9,
+                child: Container(
+                  color: Colors.white,
+                  padding: EdgeInsets.all(20.0),
+                  child: Image.asset('assets/images/Sead_inf.png', fit: BoxFit.contain),
+                ),
+              ),
             ],
           ),
         ),
       ),
     );
+  }
+
+  // Função para gerar e abrir o PDF
+  Future<void> _gerarPDF() async {
+    final pdf = pw.Document();
+
+    // Load images from the assets/images directory
+    final headerImage = (await rootBundle.load('assets/images/Sead_Sup.png')).buffer.asUint8List();
+    final footerImage = (await rootBundle.load('assets/images/Sead_inf.png')).buffer.asUint8List();
+
+    // Create the PDF content
+    pdf.addPage(
+      pw.MultiPage(
+        build: (pw.Context context) => [
+          pw.Column(
+            crossAxisAlignment: pw.CrossAxisAlignment.start,
+            children: [
+              pw.Text('Comprovante de Cadastro', style: pw.TextStyle(fontSize: 20.0, fontWeight: pw.FontWeight.bold)),
+              pw.SizedBox(height: 10.0),
+              pw.Text('Emissor: $emissor'),
+              pw.Text('Para: $para'),
+              pw.Text('Unidade Recebedora: $unidadeRecebedora'),
+              pw.Text('Cidade: $cidade'),
+              pw.Text('Nome do Responsável: $nomeResponsavel'),
+              pw.Text('Matrícula: $matricula'),
+              pw.SizedBox(height: 16.0),
+              pw.Text(
+                'Assinatura:',
+                style: pw.TextStyle(fontSize: 16.0),
+              ),
+              pw.SizedBox(height: 5.0),
+              pw.Container(
+                width: 100,
+                height: 80,
+                child: pw.Image(pw.MemoryImage(assinatura)),
+              ),
+              pw.SizedBox(height: 16.0),
+              pw.Text(
+                'Dados do Veículo:',
+                style: pw.TextStyle(
+                  fontSize: 20.0,
+                  fontWeight: pw.FontWeight.bold,
+                ),
+              ),
+              pw.SizedBox(height: 10.0),
+              for (var i = 0; i < veiculos.length; i++)
+                pw.Column(
+                  crossAxisAlignment: pw.CrossAxisAlignment.start,
+                  children: [
+                    pw.Text(
+                      'Veículo ${i + 1}:',
+                      style: pw.TextStyle(
+                        fontSize: 18.0,
+                        fontWeight: pw.FontWeight.bold,
+                        color: PdfColors.green,
+                      ),
+                    ),
+                    pw.SizedBox(height: 8.0),
+                    pw.Text('Placa: ${veiculos[i]['placa']}'),
+                    pw.Text('Modelo: ${veiculos[i]['modelo']}'),
+                    pw.Text('Cota: ${veiculos[i]['cota']}'),
+                    pw.Text('Combustível: ${veiculos[i]['combustivel']}'),
+                    pw.Text('Documento: ${veiculos[i]['documento']}'),
+                    pw.SizedBox(height: 16.0),
+                  ],
+                ),
+            ],
+          ),
+        ],
+        header: (pw.Context context) {
+          return pw.Container(
+            alignment: pw.Alignment.centerLeft,
+            child: pw.Image(pw.MemoryImage(headerImage)),
+          );
+        },
+        footer: (pw.Context context) {
+          return pw.Container(
+            alignment: pw.Alignment.centerRight,
+            child: pw.Image(pw.MemoryImage(footerImage)),
+          );
+        },
+      ),
+    );
+
+    // Save the PDF to a temporary file
+    final output = await getTemporaryDirectory();
+    final file = File("${output.path}/comprovante.pdf");
+    await file.writeAsBytes(await pdf.save());
+
+    // Open the PDF on the device
+    await OpenFile.open(file.path);
   }
 }

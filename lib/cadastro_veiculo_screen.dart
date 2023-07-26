@@ -26,7 +26,7 @@ class CadastroVeiculoScreen extends StatefulWidget {
 }
 
 class _CadastroVeiculoScreenState extends State<CadastroVeiculoScreen> {
-  List<Map<String, String>> _veiculos = [];
+  List<Map<String, dynamic>> _veiculos = []; // Changed type to dynamic
   List<Map<String, String>> _veiculosConfirmados = [];
 
   bool _canContinue() {
@@ -39,17 +39,34 @@ class _CadastroVeiculoScreenState extends State<CadastroVeiculoScreen> {
     return true;
   }
 
+  void _confirmarCadastroVeiculo() {
+    // Get the last veiculo in the list
+    Map<String, dynamic> veiculoAtual = Map.from(_veiculos[_veiculos.length - 1]);
+
+    // Add a flag to mark this veiculo as confirmed
+    veiculoAtual['confirmed'] = true;
+
+    // Add the veiculo to _veiculosConfirmados list
+    _veiculosConfirmados.add({
+      'placa': veiculoAtual['placa'],
+      'modelo': veiculoAtual['modelo'],
+      'cota': veiculoAtual['cota'],
+      'combustivel': veiculoAtual['combustivel'],
+      'documento': veiculoAtual['documento'],
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Cadastro de Veículo'),
-        backgroundColor: Color(0xFF43AD59), // Cor de fundo da AppBar
+        backgroundColor: Color(0xFF43AD59),
       ),
       body: SingleChildScrollView(
         child: Container(
           padding: EdgeInsets.all(16.0),
-          color: Colors.white, // Cor de fundo da tela
+          color: Colors.white,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
@@ -62,12 +79,13 @@ class _CadastroVeiculoScreenState extends State<CadastroVeiculoScreen> {
                       'cota': '',
                       'combustivel': '',
                       'documento': '',
+                      'confirmed': false, // Add a flag to mark unconfirmed veículos
                     });
                   });
                 },
                 style: ElevatedButton.styleFrom(
-                  primary: Color(0xFF43AD59), // Cor de fundo do botão
-                  onPrimary: Colors.white, // Cor do texto do botão
+                  primary: Color(0xFF43AD59),
+                  onPrimary: Colors.white,
                 ),
                 child: Text('Adicionar Veículo'),
               ),
@@ -79,9 +97,11 @@ class _CadastroVeiculoScreenState extends State<CadastroVeiculoScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
+                        Text('Veículo ${i + 1}', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xFF43AD59))),
+                        SizedBox(height: 8.0),
                         Row(
                           children: [
-                            Icon(Icons.directions_car, color: Color(0xFF43AD59)), // Ícone do carro
+                            Icon(Icons.directions_car, color: Color(0xFF43AD59)),
                             SizedBox(width: 8.0),
                             Expanded(
                               child: TextFormField(
@@ -101,7 +121,7 @@ class _CadastroVeiculoScreenState extends State<CadastroVeiculoScreen> {
                                   ),
                                 ),
                                 initialValue: _veiculos[i]['placa'],
-                                enabled: !_veiculosConfirmados.contains(_veiculos[i]),
+                                enabled: !_veiculos[i]['confirmed'],
                               ),
                             ),
                           ],
@@ -109,7 +129,7 @@ class _CadastroVeiculoScreenState extends State<CadastroVeiculoScreen> {
                         SizedBox(height: 8.0),
                         Row(
                           children: [
-                            Icon(Icons.car_rental, color: Color(0xFF43AD59)), // Ícone do modelo
+                            Icon(Icons.car_rental, color: Color(0xFF43AD59)),
                             SizedBox(width: 8.0),
                             Expanded(
                               child: TextFormField(
@@ -129,7 +149,7 @@ class _CadastroVeiculoScreenState extends State<CadastroVeiculoScreen> {
                                   ),
                                 ),
                                 initialValue: _veiculos[i]['modelo'],
-                                enabled: !_veiculosConfirmados.contains(_veiculos[i]),
+                                enabled: !_veiculos[i]['confirmed'],
                               ),
                             ),
                           ],
@@ -137,7 +157,7 @@ class _CadastroVeiculoScreenState extends State<CadastroVeiculoScreen> {
                         SizedBox(height: 8.0),
                         Row(
                           children: [
-                            Icon(Icons.grid_view, color: Color(0xFF43AD59)), // Ícone da cota
+                            Icon(Icons.grid_view, color: Color(0xFF43AD59)),
                             SizedBox(width: 8.0),
                             Expanded(
                               child: TextFormField(
@@ -157,7 +177,7 @@ class _CadastroVeiculoScreenState extends State<CadastroVeiculoScreen> {
                                   ),
                                 ),
                                 initialValue: _veiculos[i]['cota'],
-                                enabled: !_veiculosConfirmados.contains(_veiculos[i]),
+                                enabled: !_veiculos[i]['confirmed'],
                               ),
                             ),
                           ],
@@ -165,7 +185,7 @@ class _CadastroVeiculoScreenState extends State<CadastroVeiculoScreen> {
                         SizedBox(height: 8.0),
                         Row(
                           children: [
-                            Icon(Icons.local_gas_station, color: Color(0xFF43AD59)), // Ícone do combustível
+                            Icon(Icons.local_gas_station, color: Color(0xFF43AD59)),
                             SizedBox(width: 8.0),
                             Expanded(
                               child: TextFormField(
@@ -185,7 +205,7 @@ class _CadastroVeiculoScreenState extends State<CadastroVeiculoScreen> {
                                   ),
                                 ),
                                 initialValue: _veiculos[i]['combustivel'],
-                                enabled: !_veiculosConfirmados.contains(_veiculos[i]),
+                                enabled: !_veiculos[i]['confirmed'],
                               ),
                             ),
                           ],
@@ -193,7 +213,7 @@ class _CadastroVeiculoScreenState extends State<CadastroVeiculoScreen> {
                         SizedBox(height: 8.0),
                         Row(
                           children: [
-                            Icon(Icons.description, color: Color(0xFF43AD59)), // Ícone do documento
+                            Icon(Icons.description, color: Color(0xFF43AD59)),
                             SizedBox(width: 8.0),
                             Expanded(
                               child: TextFormField(
@@ -213,25 +233,36 @@ class _CadastroVeiculoScreenState extends State<CadastroVeiculoScreen> {
                                   ),
                                 ),
                                 initialValue: _veiculos[i]['documento'],
-                                enabled: !_veiculosConfirmados.contains(_veiculos[i]),
+                                enabled: !_veiculos[i]['confirmed'],
                               ),
                             ),
                           ],
                         ),
                         SizedBox(height: 8.0),
-                        if (!_veiculosConfirmados.contains(_veiculos[i]))
+                        if (!_veiculos[i]['confirmed'])
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               IconButton(
-                                icon: Icon(Icons.delete, color: Colors.red), // Ícone de exclusão
+                                icon: Icon(Icons.delete, color: Colors.red),
                                 onPressed: () {
                                   setState(() {
                                     _veiculos.removeAt(i);
                                   });
                                 },
                               ),
-
+                              ElevatedButton(
+                                onPressed: () {
+                                  setState(() {
+                                    _confirmarCadastroVeiculo();
+                                  });
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  primary: Color(0xFF43AD59),
+                                  onPrimary: Colors.white,
+                                ),
+                                child: Text('Confirmar'),
+                              ),
                             ],
                           ),
                       ],
@@ -253,20 +284,19 @@ class _CadastroVeiculoScreenState extends State<CadastroVeiculoScreen> {
                         matricula: widget.matricula,
                         assinatura: widget.assinatura,
                         veiculos: _veiculosConfirmados,
-                        emissor: widget.emissor, // Adicionando o campo emissor
-                        para: widget.para, // Adicionando o campo para
+                        emissor: widget.emissor,
+                        para: widget.para,
                       ),
                     ),
                   );
                 }
                     : null,
                 style: ElevatedButton.styleFrom(
-                  primary: Color(0xFF43AD59), // Cor de fundo do botão
-                  onPrimary: Colors.white, // Cor do texto do botão
+                  primary: Color(0xFF43AD59),
+                  onPrimary: Colors.white,
                 ),
                 child: Text('Continuar'),
               ),
-
             ],
           ),
         ),
