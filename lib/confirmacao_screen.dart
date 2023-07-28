@@ -6,6 +6,7 @@ import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:io';
 import 'package:flutter/services.dart' show rootBundle;
+import 'agradecimento.dart';
 
 class ConfirmacaoScreen extends StatelessWidget {
   final String emissor;
@@ -47,7 +48,8 @@ class ConfirmacaoScreen extends StatelessWidget {
                 child: Container(
                   color: Colors.white,
                   padding: EdgeInsets.all(20.0),
-                  child: Image.asset('assets/images/Sead_Sup.png', fit: BoxFit.contain),
+                  child: Image.asset(
+                      'assets/images/Sead_Sup.png', fit: BoxFit.contain),
                 ),
               ),
               // Corpo do formulário centralizado
@@ -203,26 +205,53 @@ class ConfirmacaoScreen extends StatelessWidget {
                             ),
                           ),
                         ),
-                      // Botão "Finalizar Cadastro"
+                      // Botão "Gerar comprovante"
                       Center(
-                        child: Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: ElevatedButton(
-                            onPressed: _gerarPDF, // Chama a função para gerar o PDF
-                            child: Text(
-                              'Finalizar Cadastro',
-                              style: TextStyle(
-                                fontFamily: 'Arial',
-                                fontSize: 18.0,
+                        child: Column(
+                          children: [
+                            // Botão "Gerar Comprovante"
+                            Padding(
+                              padding: const EdgeInsets.all(16.0),
+                              child: ElevatedButton(
+                                onPressed: _gerarPDF,
+                                // Chama a função para gerar o PDF
+                                child: Text(
+                                  'Gerar Comprovante',
+                                  style: TextStyle(
+                                    fontFamily: 'Arial',
+                                    fontSize: 18.0,
+                                  ),
+                                ),
+                                style: ElevatedButton.styleFrom(
+                                  primary: Color(0xFF43AD59), // Cor do botão
+                                  padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                                ),
                               ),
                             ),
-                            style: ElevatedButton.styleFrom(
-                              primary: Color(0xFF43AD59), // Cor do botão
-                              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+
+                            // Botão "Finalizar Cadastro"
+                            ElevatedButton(
+                              onPressed: () {
+                                // Ação a ser executada ao pressionar o botão "Finalizar Cadastro"
+                                Navigator.pushNamed(context, '/agradecimento');
+                              },
+                              child: Text(
+                                'Finalizar Cadastro',
+                                style: TextStyle(
+                                  fontFamily: 'Arial',
+                                  fontSize: 18.0,
+                                ),
+                              ),
+                              style: ElevatedButton.styleFrom(
+                                primary: Color(0xFF202F58), // Cor do botão
+                                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                              ),
                             ),
-                          ),
+                          ],
                         ),
                       ),
+
+
                     ],
                   ),
                 ),
@@ -233,7 +262,8 @@ class ConfirmacaoScreen extends StatelessWidget {
                 child: Container(
                   color: Colors.white,
                   padding: EdgeInsets.all(20.0),
-                  child: Image.asset('assets/images/Sead_inf.png', fit: BoxFit.contain),
+                  child: Image.asset(
+                      'assets/images/Sead_inf.png', fit: BoxFit.contain),
                 ),
               ),
             ],
@@ -248,17 +278,27 @@ class ConfirmacaoScreen extends StatelessWidget {
     final pdf = pw.Document();
 
     // Load images from the assets/images directory
-    final headerImage = (await rootBundle.load('assets/images/Sead_Sup.png')).buffer.asUint8List();
-    final footerImage = (await rootBundle.load('assets/images/Sead_inf.png')).buffer.asUint8List();
+    final headerImage = (await rootBundle.load('assets/images/Sead_Sup.png'))
+        .buffer.asUint8List();
+    final footerImage = (await rootBundle.load('assets/images/Sead_inf.png'))
+        .buffer.asUint8List();
+
+    // Get the current date and time
+    final currentDate = DateTime.now();
+    final formattedDate = "${currentDate.day} de ${_getMonthName(
+        currentDate.month)} de ${currentDate.year} ${currentDate
+        .hour}:${currentDate.minute}";
 
     // Create the PDF content
     pdf.addPage(
       pw.MultiPage(
-        build: (pw.Context context) => [
+        build: (pw.Context context) =>
+        [
           pw.Column(
             crossAxisAlignment: pw.CrossAxisAlignment.start,
             children: [
-              pw.Text('Comprovante de Cadastro', style: pw.TextStyle(fontSize: 20.0, fontWeight: pw.FontWeight.bold)),
+              pw.Text('Comprovante de Cadastro', style: pw.TextStyle(
+                  fontSize: 20.0, fontWeight: pw.FontWeight.bold)),
               pw.SizedBox(height: 10.0),
               pw.Text('Emissor: $emissor'),
               pw.Text('Para: $para'),
@@ -268,8 +308,8 @@ class ConfirmacaoScreen extends StatelessWidget {
               pw.Text('Matrícula: $matricula'),
               pw.SizedBox(height: 16.0),
               pw.Text(
-                'Assinatura:',
-                style: pw.TextStyle(fontSize: 16.0),
+                'Assinatura do responsável:',
+                style: pw.TextStyle(fontSize: 14.0),
               ),
               pw.SizedBox(height: 5.0),
               pw.Container(
@@ -309,6 +349,13 @@ class ConfirmacaoScreen extends StatelessWidget {
                 ),
             ],
           ),
+          pw.Align(
+            alignment: pw.Alignment.centerLeft,
+            child: pw.Text(
+              "Manaus - $formattedDate",
+              style: pw.TextStyle(fontSize: 12),
+            ),
+          ),
         ],
         header: (pw.Context context) {
           return pw.Container(
@@ -333,4 +380,14 @@ class ConfirmacaoScreen extends StatelessWidget {
     // Open the PDF on the device
     await OpenFile.open(file.path);
   }
+
+  String _getMonthName(int month) {
+    const monthNames = {
+      1: 'Janeiro', 2: 'Fevereiro', 3: 'Março', 4: 'Abril',
+      5: 'Maio', 6: 'Junho', 7: 'Julho', 8: 'Agosto',
+      9: 'Setembro', 10: 'Outubro', 11: 'Novembro', 12: 'Dezembro',
+    };
+    return monthNames[month] ?? '';
+  }
 }
+

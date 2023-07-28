@@ -1,9 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'select.dart'; // Importe a tela SelectScreen
 
 class SplashScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    // Navega para SelectScreen após 3 segundos
+    Future.delayed(Duration(seconds: 3), () {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => SelectScreen()),
+      );
+    });
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: Center(

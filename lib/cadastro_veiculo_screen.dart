@@ -269,7 +269,7 @@ class _CadastroVeiculoScreenState extends State<CadastroVeiculoScreen> {
                     ),
                   ),
                 ),
-              SizedBox(height: 16.0),
+              SizedBox(height: 18.0),
               ElevatedButton(
                 onPressed: _canContinue()
                     ? () {
@@ -303,4 +303,4 @@ class _CadastroVeiculoScreenState extends State<CadastroVeiculoScreen> {
       ),
     );
   }
-}
+} 
