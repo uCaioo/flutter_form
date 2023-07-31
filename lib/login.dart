@@ -4,7 +4,12 @@ import 'adm.dart'; // Importe aqui a tela de administrador (adm.dart)
 class LoginScreen extends StatelessWidget {
   final TextEditingController _firstNameController = TextEditingController();
   final TextEditingController _lastNameController = TextEditingController();
-  final TextEditingController _matriculaController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
+  // Adicionamos um FocusNode para cada campo
+  final _firstNameFocusNode = FocusNode();
+  final _lastNameFocusNode = FocusNode();
+  final _passwordFocusNode = FocusNode();
 
   @override
   Widget build(BuildContext context) {
@@ -13,6 +18,7 @@ class LoginScreen extends StatelessWidget {
         title: Text('Login'),
         backgroundColor: Color(0xFF202F58),
       ),
+      resizeToAvoidBottomInset: false,
       body: Container(
         color: Color(0xFF202F58),
         child: Center(
@@ -48,37 +54,49 @@ class LoginScreen extends StatelessWidget {
                   SizedBox(height: 20),
                   TextFormField(
                     controller: _firstNameController,
+                    focusNode: _firstNameFocusNode, // Vinculamos o FocusNode ao campo
                     decoration: InputDecoration(
                       labelText: 'Primeiro Nome',
                       prefixIcon: Icon(Icons.person),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Color(0xFF43AD59), width: 2.0),
+                      ),
                     ),
                   ),
                   SizedBox(height: 20),
                   TextFormField(
                     controller: _lastNameController,
+                    focusNode: _lastNameFocusNode, // Vinculamos o FocusNode ao campo
                     decoration: InputDecoration(
                       labelText: 'Último Nome',
                       prefixIcon: Icon(Icons.person),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Color(0xFF43AD59), width: 2.0),
+                      ),
                     ),
                   ),
                   SizedBox(height: 20),
                   TextFormField(
-                    controller: _matriculaController,
+                    controller: _passwordController,
+                    focusNode: _passwordFocusNode, // Vinculamos o FocusNode ao campo
                     obscureText: true,
                     decoration: InputDecoration(
-                      labelText: 'Matrícula',
+                      labelText: 'Senha',
                       prefixIcon: Icon(Icons.lock),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Color(0xFF43AD59), width: 2.0),
+                      ),
                     ),
                   ),
-                  SizedBox(height: 30),
+                  SizedBox(height: 50),
                   ElevatedButton(
                     onPressed: () {
                       // Autenticação do usuário
                       String firstName = _firstNameController.text;
                       String lastName = _lastNameController.text;
-                      String matricula = _matriculaController.text;
+                      String password = _passwordController.text;
 
-                      if (firstName == 'Caio' && lastName == 'Medeiros' && matricula == '0000') {
+                      if (firstName == 'Admin' && lastName == 'Teste' && password == '123Teste') {
                         Navigator.pushReplacement( // Utiliza pushReplacement ao fazer o login
                           context,
                           MaterialPageRoute(builder: (context) => AdmScreen(adminName: firstName)),
@@ -108,12 +126,12 @@ class LoginScreen extends StatelessWidget {
                     style: ElevatedButton.styleFrom(
                       primary: Color(0xFF43AD59),
                       onPrimary: Colors.white,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                       padding: EdgeInsets.symmetric(vertical: 16),
                     ),
                     child: Text(
                       'Entrar',
-                      style: TextStyle(fontSize: 18),
+                      style: TextStyle(fontSize: 15),
                     ),
                   ),
                 ],
@@ -121,6 +139,11 @@ class LoginScreen extends StatelessWidget {
             ),
           ),
         ),
+      ),
+      // Container com a cor de fundo para o espaço em branco
+      bottomSheet: Container(
+        color: Color(0xFF202F58),
+        height: MediaQuery.of(context).viewInsets.bottom, // Altura igual à parte inferior do teclado
       ),
     );
   }

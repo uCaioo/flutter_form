@@ -85,146 +85,74 @@ class _CadastroVeiculoScreenState extends State<CadastroVeiculoScreen> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.stretch,
                                 children: [
-                                  Text('Veículo ${i + 1}', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xFF43AD59))),
-                                  SizedBox(height: 8.0),
-                                  Row(
-                                    children: [
-                                      Icon(Icons.directions_car, color: Color(0xFF43AD59)),
-                                      SizedBox(width: 8.0),
-                                      Expanded(
-                                        child: TextFormField(
-                                          onChanged: (value) {
-                                            setState(() {
-                                              _veiculos[i]['placa'] = value;
-                                            });
-                                          },
-                                          decoration: InputDecoration(
-                                            hintText: 'Digite a placa do veículo',
-                                            border: OutlineInputBorder(),
-                                            focusedBorder: OutlineInputBorder(
-                                              borderSide: BorderSide(color: Color(0xFF43AD59), width: 2.0),
-                                            ),
-                                            enabledBorder: OutlineInputBorder(
-                                              borderSide: BorderSide(color: Colors.grey, width: 1.0),
-                                            ),
-                                          ),
-                                          initialValue: _veiculos[i]['placa'],
-                                          enabled: !_veiculos[i]['confirmed'],
-                                        ),
-                                      ),
-                                    ],
+                                  Text(
+                                    'Veículo ${i + 1}',
+                                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xFF43AD59)),
                                   ),
                                   SizedBox(height: 8.0),
-                                  Row(
-                                    children: [
-                                      Icon(Icons.car_rental, color: Color(0xFF43AD59)),
-                                      SizedBox(width: 8.0),
-                                      Expanded(
-                                        child: TextFormField(
-                                          onChanged: (value) {
-                                            setState(() {
-                                              _veiculos[i]['modelo'] = value;
-                                            });
-                                          },
-                                          decoration: InputDecoration(
-                                            hintText: 'Digite o modelo do veículo',
-                                            border: OutlineInputBorder(),
-                                            focusedBorder: OutlineInputBorder(
-                                              borderSide: BorderSide(color: Color(0xFF43AD59), width: 2.0),
-                                            ),
-                                            enabledBorder: OutlineInputBorder(
-                                              borderSide: BorderSide(color: Colors.grey, width: 1.0),
-                                            ),
-                                          ),
-                                          initialValue: _veiculos[i]['modelo'],
-                                          enabled: !_veiculos[i]['confirmed'],
-                                        ),
-                                      ),
-                                    ],
+                                  CustomFormField(
+                                    title: 'Placa',
+                                    icon: Icons.directions_car,
+                                    hintText: 'Digite a placa do veículo',
+                                    initialValue: _veiculos[i]['placa'],
+                                    onChanged: (value) {
+                                      setState(() {
+                                        _veiculos[i]['placa'] = value;
+                                      });
+                                    },
+                                    enabled: !_veiculos[i]['confirmed'],
                                   ),
                                   SizedBox(height: 8.0),
-                                  Row(
-                                    children: [
-                                      Icon(Icons.grid_view, color: Color(0xFF43AD59)),
-                                      SizedBox(width: 8.0),
-                                      Expanded(
-                                        child: TextFormField(
-                                          onChanged: (value) {
-                                            setState(() {
-                                              _veiculos[i]['cota'] = value;
-                                            });
-                                          },
-                                          decoration: InputDecoration(
-                                            hintText: 'Digite a cota',
-                                            border: OutlineInputBorder(),
-                                            focusedBorder: OutlineInputBorder(
-                                              borderSide: BorderSide(color: Color(0xFF43AD59), width: 2.0),
-                                            ),
-                                            enabledBorder: OutlineInputBorder(
-                                              borderSide: BorderSide(color: Colors.grey, width: 1.0),
-                                            ),
-                                          ),
-                                          initialValue: _veiculos[i]['cota'],
-                                          enabled: !_veiculos[i]['confirmed'],
-                                        ),
-                                      ),
-                                    ],
+                                  CustomFormField(
+                                    title: 'Modelo',
+                                    icon: Icons.car_rental,
+                                    hintText: 'Digite o modelo do veículo',
+                                    initialValue: _veiculos[i]['modelo'],
+                                    onChanged: (value) {
+                                      setState(() {
+                                        _veiculos[i]['modelo'] = value;
+                                      });
+                                    },
+                                    enabled: !_veiculos[i]['confirmed'],
                                   ),
                                   SizedBox(height: 8.0),
-                                  Row(
-                                    children: [
-                                      Icon(Icons.local_gas_station, color: Color(0xFF43AD59)),
-                                      SizedBox(width: 8.0),
-                                      Expanded(
-                                        child: TextFormField(
-                                          onChanged: (value) {
-                                            setState(() {
-                                              _veiculos[i]['combustivel'] = value;
-                                            });
-                                          },
-                                          decoration: InputDecoration(
-                                            hintText: 'Digite o combustível',
-                                            border: OutlineInputBorder(),
-                                            focusedBorder: OutlineInputBorder(
-                                              borderSide: BorderSide(color: Color(0xFF43AD59), width: 2.0),
-                                            ),
-                                            enabledBorder: OutlineInputBorder(
-                                              borderSide: BorderSide(color: Colors.grey, width: 1.0),
-                                            ),
-                                          ),
-                                          initialValue: _veiculos[i]['combustivel'],
-                                          enabled: !_veiculos[i]['confirmed'],
-                                        ),
-                                      ),
-                                    ],
+                                  CustomFormField(
+                                    title: 'Cota',
+                                    icon: Icons.grid_view,
+                                    hintText: 'Digite a cota',
+                                    initialValue: _veiculos[i]['cota'],
+                                    onChanged: (value) {
+                                      setState(() {
+                                        _veiculos[i]['cota'] = value;
+                                      });
+                                    },
+                                    enabled: !_veiculos[i]['confirmed'],
                                   ),
                                   SizedBox(height: 8.0),
-                                  Row(
-                                    children: [
-                                      Icon(Icons.description, color: Color(0xFF43AD59)),
-                                      SizedBox(width: 8.0),
-                                      Expanded(
-                                        child: TextFormField(
-                                          onChanged: (value) {
-                                            setState(() {
-                                              _veiculos[i]['documento'] = value;
-                                            });
-                                          },
-                                          decoration: InputDecoration(
-                                            hintText: 'Digite o documento',
-                                            border: OutlineInputBorder(),
-                                            focusedBorder: OutlineInputBorder(
-                                              borderSide: BorderSide(color: Color(0xFF43AD59), width: 2.0),
-                                            ),
-                                            enabledBorder: OutlineInputBorder(
-                                              borderSide: BorderSide(color: Colors.grey, width: 1.0),
-                                            ),
-                                          ),
-                                          initialValue: _veiculos[i]['documento'],
-                                          enabled: !_veiculos[i]['confirmed'],
-                                        ),
-                                      ),
-                                    ],
+                                  CustomFormField(
+                                    title: 'Combustível',
+                                    icon: Icons.local_gas_station,
+                                    hintText: 'Digite o combustível',
+                                    initialValue: _veiculos[i]['combustivel'],
+                                    onChanged: (value) {
+                                      setState(() {
+                                        _veiculos[i]['combustivel'] = value;
+                                      });
+                                    },
+                                    enabled: !_veiculos[i]['confirmed'],
+                                  ),
+                                  SizedBox(height: 8.0),
+                                  CustomFormField(
+                                    title: 'Documento',
+                                    icon: Icons.description,
+                                    hintText: 'Digite o documento',
+                                    initialValue: _veiculos[i]['documento'],
+                                    onChanged: (value) {
+                                      setState(() {
+                                        _veiculos[i]['documento'] = value;
+                                      });
+                                    },
+                                    enabled: !_veiculos[i]['confirmed'],
                                   ),
                                   SizedBox(height: 8.0),
                                   if (!_veiculos[i]['confirmed'])
@@ -297,6 +225,61 @@ class _CadastroVeiculoScreenState extends State<CadastroVeiculoScreen> {
           ),
         ),
       ),
+    );
+  }
+}
+
+class CustomFormField extends StatelessWidget {
+  final String title;
+  final IconData icon;
+  final String hintText;
+  final String initialValue;
+  final ValueChanged<String> onChanged;
+  final bool enabled;
+
+  CustomFormField({
+    required this.title,
+    required this.icon,
+    required this.hintText,
+    required this.initialValue,
+    required this.onChanged,
+    required this.enabled,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Text(
+          title,
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xFF43AD59)),
+        ),
+        SizedBox(height: 8.0),
+        Row(
+          children: [
+            Icon(icon, color: Color(0xFF43AD59)),
+            SizedBox(width: 8.0),
+            Expanded(
+              child: TextFormField(
+                onChanged: onChanged,
+                decoration: InputDecoration(
+                  hintText: hintText,
+                  border: OutlineInputBorder(),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Color(0xFF43AD59), width: 2.0),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.grey, width: 1.0),
+                  ),
+                ),
+                initialValue: initialValue,
+                enabled: enabled,
+              ),
+            ),
+          ],
+        ),
+      ],
     );
   }
 }
