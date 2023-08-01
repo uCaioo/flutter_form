@@ -23,14 +23,14 @@ class SelectScreen extends StatelessWidget {
           SizedBox(height: 20), // Adiciona um espaço acima da imagem
           Image.asset(
             'assets/images/Logo_Governo.png',
-            width: 180,
+            width: 280,
             height: 180,
           ),
           SizedBox(height: 20), // Adiciona um espaço entre a imagem e o texto
           Text(
             'Selecione uma opção',
             style: TextStyle(
-              fontSize: 24,
+              fontSize: 28,
               fontWeight: FontWeight.bold,
               color: Colors.white,
             ),

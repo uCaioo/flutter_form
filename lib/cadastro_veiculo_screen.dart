@@ -38,6 +38,21 @@ class _CadastroVeiculoScreenState extends State<CadastroVeiculoScreen> {
     return true;
   }
 
+  void _confirmarVeiculos() {
+    _veiculosConfirmados.clear();
+    for (var veiculo in _veiculos) {
+      if (!veiculo.containsValue('')) {
+        _veiculosConfirmados.add({
+          'placa': veiculo['placa'],
+          'modelo': veiculo['modelo'],
+          'cota': veiculo['cota'],
+          'combustivel': veiculo['combustivel'],
+          'documento': veiculo['documento'],
+        });
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -180,23 +195,12 @@ class _CadastroVeiculoScreenState extends State<CadastroVeiculoScreen> {
                 ),
               ),
               Container(
-                color: Color(0xFF202F58), // Adiciona a cor de fundo para preencher o espaço em branco
+                color: Color(0xFF202F58),
                 padding: EdgeInsets.all(16.0),
                 child: ElevatedButton(
                   onPressed: _canContinue()
                       ? () {
-                    // Confirmar o cadastro de todos os veículos antes de prosseguir
-                    _veiculos.forEach((veiculo) {
-                      _veiculosConfirmados.add({
-                        'placa': veiculo['placa'],
-                        'modelo': veiculo['modelo'],
-                        'cota': veiculo['cota'],
-                        'combustivel': veiculo['combustivel'],
-                        'documento': veiculo['documento'],
-                      });
-                    });
-
-                    // Aqui você pode implementar a lógica para enviar os dados para a tela de confirmação
+                    _confirmarVeiculos();
                     Navigator.push(
                       context,
                       MaterialPageRoute(

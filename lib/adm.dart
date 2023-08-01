@@ -1,10 +1,22 @@
 import 'package:flutter/material.dart';
 import 'login.dart'; // Importe a tela LoginScreen
 
-class AdmScreen extends StatelessWidget {
+class AdmScreen extends StatefulWidget {
   final String adminName;
 
   AdmScreen({required this.adminName});
+
+  @override
+  _AdmScreenState createState() => _AdmScreenState();
+}
+
+class _AdmScreenState extends State<AdmScreen> {
+  List<String> documentosGerados = [
+    'Documento 1',
+    'Documento 2',
+    'Documento 3',
+    // Adicione aqui os nomes dos documentos gerados, por exemplo: 'Documento 4', 'Documento 5', ...
+  ];
 
   // Função para fazer logout e voltar para a tela de login
   void _logout(BuildContext context) {
@@ -55,7 +67,8 @@ class AdmScreen extends StatelessWidget {
               leading: Icon(Icons.file_copy),
               title: Text('Documentos Gerados'),
               onTap: () {
-                // Ação a ser executada ao selecionar "Documentos Gerados"
+                // Ação para exibir os documentos gerados
+                _exibirDocumentosGerados(context);
               },
             ),
             ListTile(
@@ -88,10 +101,39 @@ class AdmScreen extends StatelessWidget {
           padding: const EdgeInsets.all(20.0),
           child: Container(
             // O restante do conteúdo da tela de administrador aqui
-            child: Text('Bem-vindo, $adminName!'),
+            child: Text('Bem-vindo, ${widget.adminName}!'),
           ),
         ),
       ),
+    );
+  }
+
+  // Função para exibir os documentos gerados em um AlertDialog
+  void _exibirDocumentosGerados(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Documentos Gerados'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: documentosGerados
+                  .map(
+                    (documento) => Text(documento),
+              )
+                  .toList(),
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('Fechar'),
+            ),
+          ],
+        );
+      },
     );
   }
 }
