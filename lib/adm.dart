@@ -11,13 +11,6 @@ class AdmScreen extends StatefulWidget {
 }
 
 class _AdmScreenState extends State<AdmScreen> {
-  List<String> documentosGerados = [
-    'Documento 1',
-    'Documento 2',
-    'Documento 3',
-    // Adicione aqui os nomes dos documentos gerados, por exemplo: 'Documento 4', 'Documento 5', ...
-  ];
-
   // Função para fazer logout e voltar para a tela de login
   void _logout(BuildContext context) {
     Navigator.pushReplacement(
@@ -30,110 +23,94 @@ class _AdmScreenState extends State<AdmScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Tela de Administrador'),
-        backgroundColor: Color(0xFF202F58),
+        title: Text('DGFC/SEAD'), // Nome do app
+        backgroundColor: Color(0xFF202F58), // Cor padrão do AppBar
       ),
       drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: <Widget>[
-            DrawerHeader(
-              decoration: BoxDecoration(
-                color: Color(0xFF202F58),
-              ),
-              child: Text(
-                'Menu Lateral',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 24,
+        child: Container(
+          color: Colors.white, // Cor de fundo do Drawer
+          child: ListView(
+            padding: EdgeInsets.zero,
+            children: <Widget>[
+              Container(
+                height: 150,
+                child: DrawerHeader(
+                  decoration: BoxDecoration(
+                    color: Colors.white, // Cor de fundo do DrawerHeader
+                  ),
+                  child: Center(
+                    child: Image.asset(
+                      'assets/images/Logo_Sead.png', // Caminho da imagem do logo
+                      height: 130,
+                      width: 130,
+                    ),
+                  ),
                 ),
               ),
-            ),
-            ListTile(
-              leading: Icon(Icons.search),
-              title: Text('Campos de Busca'),
-              onTap: () {
-                // Ação a ser executada ao selecionar "Campos de Busca"
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.filter_list),
-              title: Text('Filtro'),
-              onTap: () {
-                // Ação a ser executada ao selecionar "Filtro"
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.file_copy),
-              title: Text('Documentos Gerados'),
-              onTap: () {
-                // Ação para exibir os documentos gerados
-                _exibirDocumentosGerados(context);
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.bar_chart),
-              title: Text('Relatório'),
-              onTap: () {
-                // Ação a ser executada ao selecionar "Relatório"
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.dashboard),
-              title: Text('Dashboard'),
-              onTap: () {
-                // Ação a ser executada ao selecionar "Dashboard"
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.logout),
-              title: Text('Logout'),
-              onTap: () {
-                // Ação para fazer logout
-                _logout(context);
-              },
-            ),
-          ],
+              ListTile(
+                leading: Icon(Icons.search, color: Color(0xFF43AD59)), // Mudar cor do ícone
+                title: Text('Campos de Busca'),
+                onTap: () {
+                  // Ação a ser executada ao selecionar "Campos de Busca"
+                },
+              ),
+              ListTile(
+                leading: Icon(Icons.filter_list, color: Color(0xFF43AD59)), // Mudar cor do ícone
+                title: Text('Filtro'),
+                onTap: () {
+                  // Ação a ser executada ao selecionar "Filtro"
+                },
+              ),
+              ListTile(
+                leading: Icon(Icons.bar_chart, color: Color(0xFF43AD59)), // Mudar cor do ícone
+                title: Text('Relatório'),
+                onTap: () {
+                  // Ação a ser executada ao selecionar "Relatório"
+                },
+              ),
+              ListTile(
+                leading: Icon(Icons.dashboard, color: Color(0xFF43AD59)), // Mudar cor do ícone
+                title: Text('Dashboard'),
+                onTap: () {
+                  // Ação a ser executada ao selecionar "Dashboard"
+                },
+              ),
+              ListTile(
+                leading: Icon(Icons.logout, color: Color(0xFF43AD59)), // Mudar cor do ícone
+                title: Text('Logout'),
+                onTap: () {
+                  // Ação para fazer logout
+                  _logout(context);
+                },
+              ),
+            ],
+          ),
         ),
       ),
       body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Container(
-            // O restante do conteúdo da tela de administrador aqui
-            child: Text('Bem-vindo, ${widget.adminName}!'),
+        child: Container(
+          padding: EdgeInsets.all(20),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image.asset(
+                'assets/images/Logo_Sead.png', // Caminho da imagem do logo
+                height: 150,
+                width: 150,
+              ),
+              SizedBox(height: 20),
+              Text(
+                'Bem-vindo, ${widget.adminName}!',
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF43AD59), // Cor da mensagem de boas-vindas
+                ),
+              ),
+            ],
           ),
         ),
       ),
-    );
-  }
-
-  // Função para exibir os documentos gerados em um AlertDialog
-  void _exibirDocumentosGerados(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text('Documentos Gerados'),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: documentosGerados
-                  .map(
-                    (documento) => Text(documento),
-              )
-                  .toList(),
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text('Fechar'),
-            ),
-          ],
-        );
-      },
     );
   }
 }
