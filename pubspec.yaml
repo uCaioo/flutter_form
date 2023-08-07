@@ -41,7 +41,7 @@ flutter_launcher_icons:
   android: true
   ios: true
   image_path: "assets/images/DGFC.png"
-  min_sdk_android: 21 # android min sdk min:20, default 25
+  min_sdk_android: 21 # android min sdk min:16, default 21
   web:
     generate: true
     image_path: "assets/images/DGFC.png"
@@ -50,7 +50,7 @@ flutter_launcher_icons:
   windows:
     generate: true
     image_path: "assets/images/DGFC.png"
-    icon_size: 48 # min:48, max:266, default: 58
+    icon_size: 48 # min:48, max:256, default: 48
   macos:
     generate: true
     image_path: "assets/images/DGFC.png"
