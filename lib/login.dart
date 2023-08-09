@@ -96,12 +96,28 @@ class LoginScreen extends StatelessWidget {
                       String lastName = _lastNameController.text;
                       String password = _passwordController.text;
 
-                      if (firstName == 'Admin' && lastName == 'Teste' && password == '123Teste') {
+                      if (firstName == 'Admin' && lastName == 'Teste' && password == '123') {
                         Navigator.pushReplacement( // Utiliza pushReplacement ao fazer o login
                           context,
                           MaterialPageRoute(builder: (context) => AdmScreen(adminName: firstName)),
                         );
-                      } else {
+                      }
+
+                      if (firstName == 'Caio' && lastName == 'Medeiros' && password == '123') {
+                        Navigator.pushReplacement( // Utiliza pushReplacement ao fazer o login
+                          context,
+                          MaterialPageRoute(builder: (context) => AdmScreen(adminName: firstName)),
+                        );
+                      }
+
+                      if (firstName == 'Tarcio' && lastName == 'Amorim' && password == '123') {
+                        Navigator.pushReplacement( // Utiliza pushReplacement ao fazer o login
+                          context,
+                          MaterialPageRoute(builder: (context) => AdmScreen(adminName: firstName)),
+                        );
+                      }
+
+                      else {
                         showDialog(
                           context: context,
                           builder: (context) => AlertDialog(

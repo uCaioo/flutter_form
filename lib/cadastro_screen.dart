@@ -14,6 +14,11 @@ class _CadastroScreenState extends State<CadastroScreen> {
     penColor: Colors.black,
   );
 
+  final SignatureController _signatureController2 = SignatureController(
+    penStrokeWidth: 3,
+    penColor: Colors.black,
+  );
+
   String _emissor = 'Departamento de Gestão de Frotas e Combustível - DGFC/SEAD';
   String _para = '';
   String _unidadeRecebedora = '';
@@ -24,11 +29,13 @@ class _CadastroScreenState extends State<CadastroScreen> {
 
   void _limparAssinatura() {
     _signatureController.clear();
+    _signatureController2.clear();
   }
 
   void _navegarParaCadastroVeiculo() async {
     Uint8List? signatureBytes = await _signatureController.toPngBytes();
-    if (signatureBytes != null) {
+    Uint8List? signatureBytes2 = await _signatureController2.toPngBytes();
+    if (signatureBytes != null && signatureBytes2 != null) {
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -40,6 +47,7 @@ class _CadastroScreenState extends State<CadastroScreen> {
             cidade: _cidade,
             matricula: _matricula,
             assinatura: signatureBytes,
+            assinatura2: signatureBytes2,
           ),
         ),
       );
@@ -246,7 +254,7 @@ class _CadastroScreenState extends State<CadastroScreen> {
                       _buildFormFieldWithIcon(
                         'Matrícula',
                         Icons.badge,
-                        'Digite a matrícula',
+                        'Digite a matrícula do responsável',
                         _matricula,
                             (value) {
                           setState(() {
@@ -257,7 +265,7 @@ class _CadastroScreenState extends State<CadastroScreen> {
                       ),
                       SizedBox(height: 24.0), // Espaço entre a assinatura e o botão "Enviar"
                       Text(
-                        'Assinatura do Responsável:',
+                        'Assinatura do responsável pelos cartões:',
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           color: Color(0xFF43AD59),
@@ -281,14 +289,49 @@ class _CadastroScreenState extends State<CadastroScreen> {
                               alignment: Alignment.topRight,
                               child: IconButton(
                                 onPressed: _limparAssinatura,
-                                icon: Icon(Icons.delete), // Substituído o ícone "X" por um ícone de lixeira
-                                color: Colors.red, // Alterado para a cor vermelha
+                                icon: Icon(Icons.delete),
+                                color: Colors.red,
                               ),
                             ),
                           ],
                         ),
                       ),
                       SizedBox(height: 24.0), // Espaço abaixo do campo de assinatura
+                      Text(
+                        'Assinatura do fiscal:',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF43AD59),
+                        ),
+                      ),
+                      SizedBox(height: 12.0),
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(8.0),
+                          border: Border.all(color: Color(0xFF43AD59), width: 2.0),
+                        ),
+                        child: Stack(
+                          children: [
+                            Signature(
+                              controller: _signatureController2,
+                              height: 110,
+                              backgroundColor: Colors.white,
+                            ),
+                            Align(
+                              alignment: Alignment.topRight,
+                              child: IconButton(
+                                onPressed: () {
+                                  _signatureController2.clear();
+                                },
+                                icon: Icon(Icons.delete),
+                                color: Colors.red,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(height: 24.0), // Espaço abaixo dos campos de assinatura
                       Center(
                         child: ElevatedButton(
                           onPressed: _isFieldsFilled ? _navegarParaCadastroVeiculo : null,
@@ -300,7 +343,7 @@ class _CadastroScreenState extends State<CadastroScreen> {
                               borderRadius: BorderRadius.circular(8.0),
                             ),
                             padding: EdgeInsets.symmetric(vertical: 16.0),
-                            minimumSize: Size(200, 48), // Largura e altura mínima do botão
+                            minimumSize: Size(200, 48),
                           ),
                         ),
                       ),

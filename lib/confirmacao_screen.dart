@@ -16,6 +16,7 @@ class ConfirmacaoScreen extends StatelessWidget {
   final String nomeResponsavel;
   final String matricula;
   final Uint8List assinatura;
+  final Uint8List assinatura2; // Adicione a segunda assinatura aqui
   final List<Map<String, String>> veiculos;
 
   ConfirmacaoScreen({
@@ -26,6 +27,7 @@ class ConfirmacaoScreen extends StatelessWidget {
     required this.nomeResponsavel,
     required this.matricula,
     required this.assinatura,
+    required this.assinatura2, // Adicione a segunda assinatura aqui
     required this.veiculos,
   });
 
@@ -122,7 +124,7 @@ class ConfirmacaoScreen extends StatelessWidget {
                       ),
                       SizedBox(height: 16.0),
                       Text(
-                        'Assinatura:',
+                        'Assinatura do responsável pelos cartões:',
                         style: TextStyle(
                           fontFamily: 'Arial',
                           fontSize: 16.0,
@@ -131,10 +133,27 @@ class ConfirmacaoScreen extends StatelessWidget {
                       ),
                       SizedBox(height: 5.0),
                       Container(
-                        width: 100,
-                        height: 80,
+                        width: 200,
+                        height: 100,
                         child: Image.memory(assinatura, fit: BoxFit.contain),
                       ),
+
+                      SizedBox(height: 16.0),
+                      Text(
+                        'Assinatura do fiscal:',
+                        style: TextStyle(
+                          fontFamily: 'Arial',
+                          fontSize: 16.0,
+                        ),
+                        textAlign: TextAlign.left,
+                      ),
+                      SizedBox(height: 5.0),
+                      Container(
+                        width: 200,
+                        height: 100,
+                        child: Image.memory(assinatura2, fit: BoxFit.contain),
+                      ),
+
                       SizedBox(height: 16.0),
                       Text(
                         'Dados do Veículo:',
@@ -292,13 +311,13 @@ class ConfirmacaoScreen extends StatelessWidget {
     // Create the PDF content
     pdf.addPage(
       pw.MultiPage(
-        build: (pw.Context context) =>
-        [
+        build: (pw.Context context) => [
           pw.Column(
             crossAxisAlignment: pw.CrossAxisAlignment.start,
             children: [
-              pw.Text('Comprovante de Cadastro', style: pw.TextStyle(
-                  fontSize: 20.0, fontWeight: pw.FontWeight.bold)),
+              pw.Text('Comprovante de Cadastro',
+                  style: pw.TextStyle(
+                      fontSize: 20.0, fontWeight: pw.FontWeight.bold)),
               pw.SizedBox(height: 10.0),
               pw.Text('Emissor: $emissor'),
               pw.Text('Para: $para'),
@@ -308,7 +327,7 @@ class ConfirmacaoScreen extends StatelessWidget {
               pw.Text('Matrícula: $matricula'),
               pw.SizedBox(height: 16.0),
               pw.Text(
-                'Assinatura do responsável:',
+                'Assinatura do responsável pelos cartões:',
                 style: pw.TextStyle(fontSize: 14.0),
               ),
               pw.SizedBox(height: 5.0),
@@ -316,6 +335,19 @@ class ConfirmacaoScreen extends StatelessWidget {
                 width: 100,
                 height: 80,
                 child: pw.Image(pw.MemoryImage(assinatura)),
+              ),
+              pw.SizedBox(height: 16.0),
+              pw.Text(
+                'Assinatura do fiscal:',
+                style: pw.TextStyle(
+                  fontSize: 16.0,
+                ),
+              ),
+              pw.SizedBox(height: 5.0),
+              pw.Container(
+                width: 100,
+                height: 80,
+                child: pw.Image(pw.MemoryImage(assinatura2)),
               ),
               pw.SizedBox(height: 16.0),
               pw.Text(
@@ -389,4 +421,5 @@ class ConfirmacaoScreen extends StatelessWidget {
     };
     return monthNames[month] ?? '';
   }
+
 }

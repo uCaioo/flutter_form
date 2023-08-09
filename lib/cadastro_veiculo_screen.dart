@@ -6,19 +6,21 @@ class CadastroVeiculoScreen extends StatefulWidget {
   final String emissor;
   final String para;
   final String unidadeRecebedora;
-  final String cidade;
   final String nomeResponsavel;
   final String matricula;
+  final String cidade;
   final Uint8List assinatura;
+  final Uint8List assinatura2; // Adicione esta linha para a segunda assinatura
 
   CadastroVeiculoScreen({
     required this.emissor,
     required this.para,
     required this.unidadeRecebedora,
-    required this.cidade,
     required this.nomeResponsavel,
     required this.matricula,
+    required this.cidade,
     required this.assinatura,
+    required this.assinatura2, // Adicione esta linha para a segunda assinatura
   });
 
   @override
@@ -134,7 +136,7 @@ class _CadastroVeiculoScreenState extends State<CadastroVeiculoScreen> {
                                   CustomFormField(
                                     title: 'Cota',
                                     icon: Icons.grid_view,
-                                    hintText: 'Digite a cota',
+                                    hintText: 'Digite a cota de combustível do veículo',
                                     initialValue: _veiculos[i]['cota'],
                                     onChanged: (value) {
                                       setState(() {
@@ -147,7 +149,7 @@ class _CadastroVeiculoScreenState extends State<CadastroVeiculoScreen> {
                                   CustomFormField(
                                     title: 'Combustível',
                                     icon: Icons.local_gas_station,
-                                    hintText: 'Digite o combustível',
+                                    hintText: 'Digite o tipo de combustível',
                                     initialValue: _veiculos[i]['combustivel'],
                                     onChanged: (value) {
                                       setState(() {
@@ -160,7 +162,7 @@ class _CadastroVeiculoScreenState extends State<CadastroVeiculoScreen> {
                                   CustomFormField(
                                     title: 'Documento',
                                     icon: Icons.description,
-                                    hintText: 'Digite o documento',
+                                    hintText: 'Digite o documento do veículo',
                                     initialValue: _veiculos[i]['documento'],
                                     onChanged: (value) {
                                       setState(() {
@@ -213,6 +215,7 @@ class _CadastroVeiculoScreenState extends State<CadastroVeiculoScreen> {
                           veiculos: _veiculosConfirmados,
                           emissor: widget.emissor,
                           para: widget.para,
+                          assinatura2: widget.assinatura2,
                         ),
                       ),
                     );

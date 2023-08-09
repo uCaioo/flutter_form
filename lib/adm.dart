@@ -49,21 +49,21 @@ class _AdmScreenState extends State<AdmScreen> {
               ),
               ListTile(
                 leading: Icon(Icons.search, color: Color(0xFF43AD59)), // Mudar cor do ícone
-                title: Text('Campos de Busca'),
+                title: Text('Pesquisar'),
                 onTap: () {
                   // Ação a ser executada ao selecionar "Campos de Busca"
                 },
               ),
               ListTile(
                 leading: Icon(Icons.filter_list, color: Color(0xFF43AD59)), // Mudar cor do ícone
-                title: Text('Filtro'),
+                title: Text('Filtrar'),
                 onTap: () {
                   // Ação a ser executada ao selecionar "Filtro"
                 },
               ),
               ListTile(
                 leading: Icon(Icons.bar_chart, color: Color(0xFF43AD59)), // Mudar cor do ícone
-                title: Text('Relatório'),
+                title: Text('Relatórios'),
                 onTap: () {
                   // Ação a ser executada ao selecionar "Relatório"
                 },
@@ -76,8 +76,8 @@ class _AdmScreenState extends State<AdmScreen> {
                 },
               ),
               ListTile(
-                leading: Icon(Icons.logout, color: Color(0xFF43AD59)), // Mudar cor do ícone
-                title: Text('Logout'),
+                leading: Icon(Icons.logout, color:Colors.red), // Mudar cor do ícone
+                title: Text('Sair'),
                 onTap: () {
                   // Ação para fazer logout
                   _logout(context);
