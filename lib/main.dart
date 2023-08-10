@@ -1,18 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'splash_screen.dart';
 import 'welcome_screen.dart';
-import 'select.dart'; // Importe a tela SelectScreen
-import 'agradecimento.dart'; // Importe a tela AgradecimentoScreen
+import 'select.dart';
+import 'agradecimento.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    // Define o estilo da barra de status do aplicativo
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
       statusBarIconBrightness: Brightness.dark,
@@ -24,11 +28,11 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primaryColor: Colors.white,
       ),
-      initialRoute: '/', // Defina a rota inicial
+      initialRoute: '/',
       routes: {
-        '/': (context) => LoadingScreen(), // Rota para a tela de carregamento
-        '/select': (context) => SelectScreen(), // Rota para a tela de seleção
-        '/agradecimento': (context) => AgradecimentoScreen(), // Rota para a tela de agradecimento
+        '/': (context) => LoadingScreen(),
+        '/select': (context) => SelectScreen(),
+        '/agradecimento': (context) => AgradecimentoScreen(),
       },
     );
   }
@@ -43,14 +47,76 @@ class _LoadingScreenState extends State<LoadingScreen> {
   @override
   void initState() {
     super.initState();
-    // Adiciona um atraso de 3 segundos antes de navegar para a tela de seleção
     Future.delayed(Duration(seconds: 3), () {
-      Navigator.pushReplacementNamed(context, '/select'); // Navega para a tela de seleção
+      Navigator.pushReplacementNamed(context, '/select');
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return SplashScreen();
+  }
+}
+
+void testFirestoreConnection() async {
+  try {
+    CollectionReference testCollection =
+    FirebaseFirestore.instance.collection('test');
+
+    await testCollection.add({
+      'message': 'tankei a firebase!',
+      'timestamp': FieldValue.serverTimestamp(),
+    });
+
+    CollectionReference anotherTestCollection =
+    FirebaseFirestore.instance.collection('another_test');
+
+    await anotherTestCollection.add({
+      'message': 'O caio finalmente tankou a Firebase!',
+      'timestamp': FieldValue.serverTimestamp(),
+    });
+
+    CollectionReference firebaseFoiTankadaCollection =
+    FirebaseFirestore.instance.collection('firebase_foi_tankada');
+
+    await firebaseFoiTankadaCollection.add({
+      'message': 'A Firebase foi tankada com sucesso!',
+      'timestamp': FieldValue.serverTimestamp(),
+    });
+
+    print('Teste de conexão com o Firestore bem-sucedido!');
+  } catch (e) {
+    print('Erro ao testar a conexão com o Firestore: $e');
+  }
+}
+
+class SelectScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    // Realizar o teste de conexão e adicionar dados às coleções
+    testFirestoreConnection();
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Tela de Seleção'),
+      ),
+      body: Center(
+        child: Text('Teste de conexão realizado. Verifique o console para detalhes.'),
+      ),
+    );
+  }
+}
+
+class AgradecimentoScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Tela de Agradecimento'),
+      ),
+      body: Center(
+        child: Text('Obrigado por usar o aplicativo!'),
+      ),
+    );
   }
 }
