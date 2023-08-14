@@ -4,12 +4,10 @@ import 'adm.dart'; // Importe aqui a tela de administrador (adm.dart)
 class LoginScreen extends StatelessWidget {
   final TextEditingController _firstNameController = TextEditingController();
   final TextEditingController _lastNameController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
 
   // Adicionamos um FocusNode para cada campo
   final _firstNameFocusNode = FocusNode();
   final _lastNameFocusNode = FocusNode();
-  final _passwordFocusNode = FocusNode();
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +52,7 @@ class LoginScreen extends StatelessWidget {
                   SizedBox(height: 20),
                   TextFormField(
                     controller: _firstNameController,
-                    focusNode: _firstNameFocusNode, // Vinculamos o FocusNode ao campo
+                    focusNode: _firstNameFocusNode,
                     decoration: InputDecoration(
                       labelText: 'Primeiro Nome',
                       prefixIcon: Icon(Icons.person),
@@ -66,7 +64,7 @@ class LoginScreen extends StatelessWidget {
                   SizedBox(height: 20),
                   TextFormField(
                     controller: _lastNameController,
-                    focusNode: _lastNameFocusNode, // Vinculamos o FocusNode ao campo
+                    focusNode: _lastNameFocusNode,
                     decoration: InputDecoration(
                       labelText: 'Último Nome',
                       prefixIcon: Icon(Icons.person),
@@ -75,69 +73,13 @@ class LoginScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-                  SizedBox(height: 20),
-                  TextFormField(
-                    controller: _passwordController,
-                    focusNode: _passwordFocusNode, // Vinculamos o FocusNode ao campo
-                    obscureText: true,
-                    decoration: InputDecoration(
-                      labelText: 'Senha',
-                      prefixIcon: Icon(Icons.lock),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Color(0xFF43AD59), width: 2.0),
-                      ),
-                    ),
-                  ),
                   SizedBox(height: 50),
                   ElevatedButton(
                     onPressed: () {
-                      // Autenticação do usuário
-                      String firstName = _firstNameController.text;
-                      String lastName = _lastNameController.text;
-                      String password = _passwordController.text;
-
-                      if (firstName == 'Admin' && lastName == 'Teste' && password == '123') {
-                        Navigator.pushReplacement( // Utiliza pushReplacement ao fazer o login
-                          context,
-                          MaterialPageRoute(builder: (context) => AdmScreen(adminName: firstName)),
-                        );
-                      }
-
-                      if (firstName == 'Caio' && lastName == 'Medeiros' && password == '123') {
-                        Navigator.pushReplacement( // Utiliza pushReplacement ao fazer o login
-                          context,
-                          MaterialPageRoute(builder: (context) => AdmScreen(adminName: firstName)),
-                        );
-                      }
-
-                      if (firstName == 'Tarcio' && lastName == 'Amorim' && password == '123') {
-                        Navigator.pushReplacement( // Utiliza pushReplacement ao fazer o login
-                          context,
-                          MaterialPageRoute(builder: (context) => AdmScreen(adminName: firstName)),
-                        );
-                      }
-
-                      else {
-                        showDialog(
-                          context: context,
-                          builder: (context) => AlertDialog(
-                            title: Text('Erro de Autenticação'),
-                            content: Text('Usuário ou senha incorretos.'),
-                            actions: [
-                              ElevatedButton(
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  primary: Color(0xFF43AD59),
-                                  onPrimary: Colors.white,
-                                ),
-                                child: Text('Fechar'),
-                              ),
-                            ],
-                          ),
-                        );
-                      }
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(builder: (context) => AdmScreen(adminName: "Nome do Administrador")),
+                      );
                     },
                     style: ElevatedButton.styleFrom(
                       primary: Color(0xFF43AD59),

@@ -3,7 +3,7 @@ import 'dart:typed_data';
 import 'agradecimento.dart'; // Certifique-se de importar a classe AgradecimentoScreen
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart'; // Importe a biblioteca do Cloud Firestore
-
+import 'package:firebase_storage/firebase_storage.dart';
 
 
 
@@ -29,6 +29,25 @@ class ConfirmacaoScreen extends StatelessWidget {
     required this.assinatura2, // Adicione a segunda assinatura aqui
     required this.veiculos,
   });
+
+
+  // Função para fazer upload da imagem para o Firebase Storage
+  Future<String> uploadImageAndGetUrl(Uint8List imageBytes) async {
+    String imageUrl = '';
+
+    try {
+      Reference storageReference = FirebaseStorage.instance.ref().child('imagens').child('assinatura.png');
+      UploadTask uploadTask = storageReference.putData(imageBytes);
+      await uploadTask.whenComplete(() => null);
+      imageUrl = await storageReference.getDownloadURL();
+    } catch (e) {
+      print('Erro ao fazer upload de imagem: $e');
+    }
+
+    return imageUrl;
+  }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -231,7 +250,22 @@ class ConfirmacaoScreen extends StatelessWidget {
                             // Botão "Finalizar Cadastro"
                             ElevatedButton(
                               onPressed: () async {
-                                // Crie um mapa com os dados do cadastro
+                                // Criar referência ao Firebase Storage
+                                final storage = FirebaseStorage.instance;
+                                final ref = storage.ref().child('assinaturas');
+
+                                // Upload das assinaturas
+                                final responsavelRef = ref.child('$nomeResponsavel/responsavel.png');
+                                final UploadTask responsavelUploadTask = responsavelRef.putData(assinatura);
+                                final responsavelSnapshot = await responsavelUploadTask;
+                                final responsavelUrl = await responsavelSnapshot.ref.getDownloadURL();
+
+                                final fiscalRef = ref.child('$nomeResponsavel/fiscal.png');
+                                final UploadTask fiscalUploadTask = fiscalRef.putData(assinatura2);
+                                final fiscalSnapshot = await fiscalUploadTask;
+                                final fiscalUrl = await fiscalSnapshot.ref.getDownloadURL();
+
+                                // Criar mapa de dados para enviar ao Firestore
                                 Map<String, dynamic> data = {
                                   'emissor': emissor,
                                   'para': para,
@@ -239,8 +273,8 @@ class ConfirmacaoScreen extends StatelessWidget {
                                   'cidade': cidade,
                                   'nomeResponsavel': nomeResponsavel,
                                   'matricula': matricula,
-                                  'assinatura': assinatura,
-                                  'assinatura2': assinatura2,
+                                  'assinaturaResponsavel': responsavelUrl,
+                                  'assinaturaFiscal': fiscalUrl,
                                   'veiculos': veiculos,
                                 };
 
@@ -248,10 +282,15 @@ class ConfirmacaoScreen extends StatelessWidget {
                                 CollectionReference cadastros = FirebaseFirestore.instance.collection('cadastros');
 
                                 try {
-                                  // Envie os dados para o Firebase
-                                  await cadastros.add(data);
+                                  // Criar um nome único para o documento (com base no nome do responsável e um timestamp)
+                                  String documentoNome = '${nomeResponsavel}_${DateTime.now().millisecondsSinceEpoch}';
+                                  // Criar o documento com o nome único
+                                  DocumentReference cadastroRef = cadastros.doc(documentoNome);
 
-                                  // Navegue para a tela de agradecimento
+                                  // Enviar dados para o Firestore
+                                  await cadastroRef.set(data);
+
+                                  // Navegar para a tela de agradecimento
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
@@ -269,7 +308,6 @@ class ConfirmacaoScreen extends StatelessWidget {
                                     ),
                                   );
                                 } catch (e) {
-                                  // Trate erros de envio para o Firebase
                                   print('Erro ao enviar dados para o Firebase: $e');
                                 }
                               },
@@ -281,10 +319,12 @@ class ConfirmacaoScreen extends StatelessWidget {
                                 ),
                               ),
                               style: ElevatedButton.styleFrom(
-                                primary: Color(0xFF202F58), // Cor do botão
+                                primary: Color(0xFF202F58),
                                 padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                               ),
                             ),
+
+
 
 
                           ],
