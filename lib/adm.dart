@@ -69,39 +69,6 @@ class _AdmScreenState extends State<AdmScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             // Implementar campos de pesquisa e filtro aqui
-
-            // Tabela de registros
-            Expanded(
-              child: StreamBuilder<QuerySnapshot>(
-                stream: FirebaseFirestore.instance.collection('cadastros').snapshots(),
-                builder: (context, snapshot) {
-                  if (!snapshot.hasData) {
-                    return CircularProgressIndicator();
-                  }
-
-                  // Tratar se snapshot.data for nulo
-                  final documents = snapshot.data?.docs ?? [];
-
-                  // Implementar a tabela de registros
-                  return ListView.builder(
-                    itemCount: documents.length,
-                    itemBuilder: (context, index) {
-                      // Exibir dados para cada registro
-                      // Acesse os campos usando documents[index].data()
-                      final data = documents[index].data() as Map<String, dynamic>;
-                      return ListTile(
-                        title: Text('Nome do Responsável: ${data['nomeResponsavel'] ?? 'N/A'}'),
-                        subtitle: Text('Matrícula: ${data['matricula'] ?? 'N/A'}'),
-                        trailing: Icon(Icons.arrow_forward),
-                        onTap: () {
-                          _showDetails(data);
-                        },
-                      );
-                    },
-                  );
-                },
-              ),
-            ),
           ],
         ),
       ),
@@ -110,16 +77,45 @@ class _AdmScreenState extends State<AdmScreen> {
 
   void _showReports() {
     FirebaseFirestore.instance.collection('cadastros').get().then((querySnapshot) {
-      querySnapshot.docs.forEach((documentSnapshot) {
-        print('Dados do documento: ${documentSnapshot.data()}');
-      });
+      List<Map<String, dynamic>> cadastros = querySnapshot.docs.map((documentSnapshot) {
+        return documentSnapshot.data() as Map<String, dynamic>;
+      }).toList();
+
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text('Relatórios'),
+            content: Container(
+              width: MediaQuery.of(context).size.width * 0.8, // Definir a largura do conteúdo
+              child: ListView.builder(
+                itemCount: cadastros.length,
+                itemBuilder: (context, index) {
+                  return _buildReportEntry(cadastros[index]);
+                },
+              ),
+            ),
+          );
+        },
+      );
     }).catchError((error) {
       print('Erro ao buscar relatórios: $error');
     });
   }
 
+  Widget _buildReportEntry(Map<String, dynamic> cadastro) {
+    return ListTile(
+      title: Text('Nome do Responsável: ${cadastro['nomeResponsavel'] ?? 'N/A'}'),
+      subtitle: Text('Matrícula: ${cadastro['matricula'] ?? 'N/A'}'),
+      onTap: () {
+        _showDetailsFromReport(cadastro);
+      },
+    );
+  }
 
-  void _showDetails(Map<String, dynamic> data) {
+
+
+  void _showDetailsFromReport(Map<String, dynamic> data) {
     showDialog(
       context: context,
       builder: (context) {
@@ -151,7 +147,7 @@ class _AdmScreenState extends State<AdmScreen> {
               onPressed: () {
                 Navigator.pop(context);
               },
-                child: Text('Fechar', style: TextStyle(color: Colors.red)),
+              child: Text('Fechar', style: TextStyle(color: Colors.red)),
             ),
           ],
         );
@@ -238,8 +234,4 @@ class _AdmScreenState extends State<AdmScreen> {
       ),
     );
   }
-
-
-
-
 }
