@@ -125,26 +125,33 @@ class _AdmScreenState extends State<AdmScreen> {
       builder: (context) {
         return AlertDialog(
           title: Text('Detalhes do Registro'),
-          content: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildDetailRow('Emissor', data['emissor']),
-              _buildDetailRow('Para', data['para']),
-              _buildDetailRow('Unidade Recebedora', data['unidadeRecebedora']),
-              _buildDetailRow('Cidade', data['cidade']),
-              _buildDetailRow('Nome do Responsável', data['nomeResponsavel']),
-              _buildDetailRow('Matrícula', data['matricula']),
-              _buildSignatureImage('Assinatura Responsável', data['assinaturaResponsavel']),
-              _buildSignatureImage('Assinatura Fiscal', data['assinaturaFiscal']),
-              if (data['veiculos'] != null) _buildVeiculos(data['veiculos']),
-            ],
+          content: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Image.asset('assets/images/Sead_Sup.png'), // Cabeçalho
+                SizedBox(height: 16),
+                _buildDetailRow('Emissor', data['emissor']),
+                _buildDetailRow('Para', data['para']),
+                _buildDetailRow('Unidade Recebedora', data['unidadeRecebedora']),
+                _buildDetailRow('Cidade', data['cidade']),
+                _buildDetailRow('Nome do Responsável', data['nomeResponsavel']),
+                _buildDetailRow('Matrícula', data['matricula']),
+                SizedBox(height: 16),
+                _buildSignatureImage('Assinatura Responsável', data['assinaturaResponsavel']),
+                _buildSignatureImage('Assinatura Fiscal', data['assinaturaFiscal']),
+                if (data['veiculos'] != null) ..._buildVeiculos(data['veiculos']),
+                SizedBox(height: 16),
+                Image.asset('assets/images/Sead_inf.png'), // Rodapé
+              ],
+            ),
           ),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.pop(context);
               },
-              child: Text('Fechar'),
+                child: Text('Fechar', style: TextStyle(color: Colors.red)),
             ),
           ],
         );
@@ -187,40 +194,37 @@ class _AdmScreenState extends State<AdmScreen> {
     );
   }
 
-  Widget _buildVeiculos(List<dynamic>? veiculos) {
+  List<Widget> _buildVeiculos(List<dynamic>? veiculos) {
     if (veiculos == null || veiculos.isEmpty) {
-      return SizedBox.shrink();
+      return [];
     }
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.only(top: 8.0),
-          child: Text(
-            'Veículos:',
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-          ),
+    return [
+      Padding(
+        padding: const EdgeInsets.only(top: 8.0),
+        child: Text(
+          'Veículos:',
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
         ),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: veiculos.map<Widget>((veiculo) {
-            return Padding(
-              padding: const EdgeInsets.only(left: 16.0, top: 4),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _buildVeiculoDetail('Combustível', veiculo['combustivel']),
-                  _buildVeiculoDetail('Cota', veiculo['cota']),
-                  _buildVeiculoDetail('Modelo', veiculo['modelo']),
-                  _buildVeiculoDetail('Placa', veiculo['placa']),
-                  _buildVeiculoDetail('Documento', veiculo['documento']),
-                ],
-              ),
-            );
-          }).toList(),
-        ),
-      ],
-    );
+      ),
+      Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: veiculos.map<Widget>((veiculo) {
+          return Padding(
+            padding: const EdgeInsets.only(left: 16.0, top: 4),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildVeiculoDetail('Combustível', veiculo['combustivel']),
+                _buildVeiculoDetail('Cota', veiculo['cota']),
+                _buildVeiculoDetail('Modelo', veiculo['modelo']),
+                _buildVeiculoDetail('Placa', veiculo['placa']),
+                _buildVeiculoDetail('Documento', veiculo['documento']),
+              ],
+            ),
+          );
+        }).toList(),
+      ),
+    ];
   }
 
   Widget _buildVeiculoDetail(String label, String? value) {
@@ -234,6 +238,8 @@ class _AdmScreenState extends State<AdmScreen> {
       ),
     );
   }
+
+
 
 
 }
