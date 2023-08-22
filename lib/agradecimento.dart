@@ -228,7 +228,7 @@ class AgradecimentoScreen extends StatelessWidget {
 
     // Save the PDF to a temporary file
     final output = await getTemporaryDirectory();
-    final file = File("${output.path}/comprovante.pdf");
+    final file = File("${output.path}/comprovante_DGFC_SEAD.pdf");
     await file.writeAsBytes(await pdf.save());
 
     // Open the PDF on the device

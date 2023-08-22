@@ -250,65 +250,121 @@ class ConfirmacaoScreen extends StatelessWidget {
                             // Botão "Finalizar Cadastro"
                             ElevatedButton(
                               onPressed: () async {
-                                // Criar referência ao Firebase Storage
-                                final storage = FirebaseStorage.instance;
-                                final ref = storage.ref().child('assinaturas');
-
-                                // Upload das assinaturas
-                                final responsavelRef = ref.child('$nomeResponsavel/responsavel.png');
-                                final UploadTask responsavelUploadTask = responsavelRef.putData(assinatura);
-                                final responsavelSnapshot = await responsavelUploadTask;
-                                final responsavelUrl = await responsavelSnapshot.ref.getDownloadURL();
-
-                                final fiscalRef = ref.child('$nomeResponsavel/fiscal.png');
-                                final UploadTask fiscalUploadTask = fiscalRef.putData(assinatura2);
-                                final fiscalSnapshot = await fiscalUploadTask;
-                                final fiscalUrl = await fiscalSnapshot.ref.getDownloadURL();
-
-                                // Criar mapa de dados para enviar ao Firestore
-                                Map<String, dynamic> data = {
-                                  'emissor': emissor,
-                                  'para': para,
-                                  'unidadeRecebedora': unidadeRecebedora,
-                                  'cidade': cidade,
-                                  'nomeResponsavel': nomeResponsavel,
-                                  'matricula': matricula,
-                                  'assinaturaResponsavel': responsavelUrl,
-                                  'assinaturaFiscal': fiscalUrl,
-                                  'veiculos': veiculos,
-                                };
-
-                                // Referência à coleção "cadastros"
-                                CollectionReference cadastros = FirebaseFirestore.instance.collection('cadastros');
-
-                                try {
-                                  // Criar um nome único para o documento (com base no nome do responsável e um timestamp)
-                                  String documentoNome = '${nomeResponsavel}_${DateTime.now().millisecondsSinceEpoch}';
-                                  // Criar o documento com o nome único
-                                  DocumentReference cadastroRef = cadastros.doc(documentoNome);
-
-                                  // Enviar dados para o Firestore
-                                  await cadastroRef.set(data);
-
-                                  // Navegar para a tela de agradecimento
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => AgradecimentoScreen(
-                                        emissor: emissor,
-                                        para: para,
-                                        unidadeRecebedora: unidadeRecebedora,
-                                        cidade: cidade,
-                                        nomeResponsavel: nomeResponsavel,
-                                        matricula: matricula,
-                                        assinatura: assinatura,
-                                        assinatura2: assinatura2,
-                                        veiculos: veiculos,
+                                // Mostrar um diálogo de confirmação
+                                bool confirm = await showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      title: Text(
+                                        "Confirmar Cadastro",
+                                        style: TextStyle(
+                                          color: Color(0xFF202F58), // Cor do título
+                                        ),
                                       ),
-                                    ),
+                                      content: Text(
+                                        "Deseja realmente finalizar o cadastro?",
+                                        style: TextStyle(
+                                          color: Color(0xFF202F58), // Cor do conteúdo
+                                        ),
+                                      ),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.of(context).pop(false); // Não confirmado
+                                          },
+                                          child: Text(
+                                            "Cancelar",
+                                            style: TextStyle(
+                                              color: Colors.red, // Cor do texto do botão
+                                            ),
+                                          ),
+                                        ),
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.of(context).pop(true); // Confirmado
+                                          },
+                                          child: Text(
+                                            "Confirmar",
+                                            style: TextStyle(
+                                              color: Color(0xFF43AD59), // Cor do texto do botão
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                      backgroundColor: Colors.white, // Cor de fundo da janela
+                                    );
+                                  },
+                                );
+
+                                // Verificar se o usuário confirmou
+                                if (confirm == true) {
+                                  // Mostrar a animação de carregamento
+                                  showDialog(
+                                    context: context,
+                                    barrierDismissible: false, // Impedir o fechamento do diálogo
+                                    builder: (BuildContext context) {
+                                      return Center(
+                                        child: CircularProgressIndicator(
+                                          valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF43AD59)), // Cor da animação
+                                        ),
+                                      );
+                                    },
                                   );
-                                } catch (e) {
-                                  print('Erro ao enviar dados para o Firebase: $e');
+
+                                  try {
+                                    // Upload das assinaturas para o Firebase Storage
+                                    final responsavelImageUrl = await uploadImageAndGetUrl(assinatura);
+                                    final fiscalImageUrl = await uploadImageAndGetUrl(assinatura2);
+
+                                    // Criar mapa de dados para enviar ao Firestore
+                                    Map<String, dynamic> data = {
+                                      'emissor': emissor,
+                                      'para': para,
+                                      'unidadeRecebedora': unidadeRecebedora,
+                                      'cidade': cidade,
+                                      'nomeResponsavel': nomeResponsavel,
+                                      'matricula': matricula,
+                                      'assinaturaResponsavel': responsavelImageUrl,
+                                      'assinaturaFiscal': fiscalImageUrl,
+                                      'veiculos': veiculos,
+                                    };
+
+                                    // Referência à coleção "cadastros"
+                                    CollectionReference cadastros = FirebaseFirestore.instance.collection('cadastros');
+
+                                    // Criar um nome único para o documento (com base no nome do responsável e um timestamp)
+                                    String documentoNome = '${nomeResponsavel}_${DateTime.now().millisecondsSinceEpoch}';
+                                    // Criar o documento com o nome único
+                                    DocumentReference cadastroRef = cadastros.doc(documentoNome);
+
+                                    // Enviar dados para o Firestore
+                                    await cadastroRef.set(data);
+
+                                    // Fechar o diálogo de carregamento
+                                    Navigator.of(context).pop();
+
+                                    // Navegar para a tela de agradecimento
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => AgradecimentoScreen(
+                                          emissor: emissor,
+                                          para: para,
+                                          unidadeRecebedora: unidadeRecebedora,
+                                          cidade: cidade,
+                                          nomeResponsavel: nomeResponsavel,
+                                          matricula: matricula,
+                                          assinatura: assinatura,
+                                          assinatura2: assinatura2,
+                                          veiculos: veiculos,
+                                        ),
+                                      ),
+                                    );
+                                  } catch (e) {
+                                    print('Erro ao finalizar cadastro: $e');
+                                    // Tratar o erro, se necessário
+                                    Navigator.of(context).pop(); // Fechar o diálogo de carregamento
+                                  }
                                 }
                               },
                               child: Text(
@@ -319,7 +375,7 @@ class ConfirmacaoScreen extends StatelessWidget {
                                 ),
                               ),
                               style: ElevatedButton.styleFrom(
-                                primary: Color(0xFF202F58),
+                                primary: Color(0xFF43AD59), // Cor de fundo do botão
                                 padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                               ),
                             ),

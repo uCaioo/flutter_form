@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'login.dart'; // Importe a tela LoginScreen
+import 'login.dart';
+import 'relatorio.dart';
+import 'lixeira.dart';
 
 class AdmScreen extends StatefulWidget {
   final String adminName;
@@ -12,6 +14,8 @@ class AdmScreen extends StatefulWidget {
 }
 
 class _AdmScreenState extends State<AdmScreen> {
+  List<Map<String, dynamic>> lixeira = [];
+
   void _logout(BuildContext context) {
     Navigator.pushReplacement(
       context,
@@ -29,34 +33,65 @@ class _AdmScreenState extends State<AdmScreen> {
       drawer: Drawer(
         child: ListView(
           children: [
-            UserAccountsDrawerHeader(
-              accountName: Text('Bem-vindo, ${widget.adminName}'),
-              accountEmail: null,
+            Container(
+              color: Colors.white,
+              padding: EdgeInsets.symmetric(vertical: 20),
+              child: Center(
+                child: Image.asset(
+                  'assets/images/DGFC.png',
+                  width: MediaQuery.of(context).size.width * 0.6,
+                ),
+              ),
             ),
+            SizedBox(height: 20),
             ListTile(
-              leading: Icon(Icons.search),
-              title: Text('Pesquisar'),
+              leading: Icon(Icons.search, color: Color(0xFF43AD59)),
+              title: Text('Pesquisar', style: TextStyle(color: Color(0xFF202F58))),
               onTap: () {
                 // Implementar ação de pesquisa
               },
             ),
+            SizedBox(height: 10),
             ListTile(
-              leading: Icon(Icons.filter_list),
-              title: Text('Filtrar'),
+              leading: Icon(Icons.filter_list, color: Color(0xFF43AD59)),
+              title: Text('Filtrar', style: TextStyle(color: Color(0xFF202F58))),
               onTap: () {
                 // Implementar ação de filtro
               },
             ),
+            SizedBox(height: 10),
             ListTile(
-              leading: Icon(Icons.bar_chart),
-              title: Text('Relatórios'),
+              leading: Icon(Icons.bar_chart, color: Color(0xFF43AD59)),
+              title: Text('Relatórios', style: TextStyle(color: Color(0xFF202F58))),
               onTap: () {
                 _showReports();
               },
             ),
+            SizedBox(height: 10),
+            ListTile(
+              leading: Icon(Icons.dashboard, color: Color(0xFF43AD59)),
+              title: Text('Dashboard', style: TextStyle(color: Color(0xFF202F58))),
+              onTap: () {
+                // Implementar ação do Dashboard
+              },
+            ),
+            SizedBox(height: 10),
+            ListTile(
+              leading: Icon(Icons.delete, color: Color(0xFF43AD59)),
+              title: Text('Lixeira', style: TextStyle(color: Color(0xFF202F58))),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => LixeiraScreen(lixeira: lixeira),
+                  ),
+                );
+              },
+            ),
+            SizedBox(height: 20),
             ListTile(
               leading: Icon(Icons.logout, color: Colors.red),
-              title: Text('Sair'),
+              title: Text('Sair', style: TextStyle(color: Color(0xFF202F58))),
               onTap: () {
                 _logout(context);
               },
@@ -68,6 +103,11 @@ class _AdmScreenState extends State<AdmScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            Text(
+              'Bem-vindo, ${widget.adminName}!',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 20),
             // Implementar campos de pesquisa e filtro aqui
           ],
         ),
@@ -81,157 +121,14 @@ class _AdmScreenState extends State<AdmScreen> {
         return documentSnapshot.data() as Map<String, dynamic>;
       }).toList();
 
-      showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: Text('Relatórios'),
-            content: Container(
-              width: MediaQuery.of(context).size.width * 0.8, // Definir a largura do conteúdo
-              child: ListView.builder(
-                itemCount: cadastros.length,
-                itemBuilder: (context, index) {
-                  return _buildReportEntry(cadastros[index]);
-                },
-              ),
-            ),
-          );
-        },
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => RelatoriosScreen(relatorios: cadastros),
+        ),
       );
     }).catchError((error) {
       print('Erro ao buscar relatórios: $error');
     });
-  }
-
-  Widget _buildReportEntry(Map<String, dynamic> cadastro) {
-    return ListTile(
-      title: Text('Nome do Responsável: ${cadastro['nomeResponsavel'] ?? 'N/A'}'),
-      subtitle: Text('Matrícula: ${cadastro['matricula'] ?? 'N/A'}'),
-      onTap: () {
-        _showDetailsFromReport(cadastro);
-      },
-    );
-  }
-
-
-
-  void _showDetailsFromReport(Map<String, dynamic> data) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text('Detalhes do Registro'),
-          content: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Image.asset('assets/images/Sead_Sup.png'), // Cabeçalho
-                SizedBox(height: 16),
-                _buildDetailRow('Emissor', data['emissor']),
-                _buildDetailRow('Para', data['para']),
-                _buildDetailRow('Unidade Recebedora', data['unidadeRecebedora']),
-                _buildDetailRow('Cidade', data['cidade']),
-                _buildDetailRow('Nome do Responsável', data['nomeResponsavel']),
-                _buildDetailRow('Matrícula', data['matricula']),
-                SizedBox(height: 16),
-                _buildSignatureImage('Assinatura Responsável', data['assinaturaResponsavel']),
-                _buildSignatureImage('Assinatura Fiscal', data['assinaturaFiscal']),
-                if (data['veiculos'] != null) ..._buildVeiculos(data['veiculos']),
-                SizedBox(height: 16),
-                Image.asset('assets/images/Sead_inf.png'), // Rodapé
-              ],
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: Text('Fechar', style: TextStyle(color: Colors.red)),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  Widget _buildDetailRow(String label, String? value) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4.0),
-      child: RichText(
-        text: TextSpan(
-          style: TextStyle(color: Colors.black, fontSize: 14),
-          children: [
-            TextSpan(text: '$label: ', style: TextStyle(fontWeight: FontWeight.bold)),
-            TextSpan(text: value ?? 'N/A'),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildSignatureImage(String title, String? imageUrl) {
-    if (imageUrl == null) {
-      return SizedBox.shrink();
-    }
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          title,
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-        ),
-        SizedBox(height: 8),
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8.0),
-          child: Image.network(imageUrl, width: 150, height: 100),
-        ),
-      ],
-    );
-  }
-
-  List<Widget> _buildVeiculos(List<dynamic>? veiculos) {
-    if (veiculos == null || veiculos.isEmpty) {
-      return [];
-    }
-    return [
-      Padding(
-        padding: const EdgeInsets.only(top: 8.0),
-        child: Text(
-          'Veículos:',
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-        ),
-      ),
-      Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: veiculos.map<Widget>((veiculo) {
-          return Padding(
-            padding: const EdgeInsets.only(left: 16.0, top: 4),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _buildVeiculoDetail('Combustível', veiculo['combustivel']),
-                _buildVeiculoDetail('Cota', veiculo['cota']),
-                _buildVeiculoDetail('Modelo', veiculo['modelo']),
-                _buildVeiculoDetail('Placa', veiculo['placa']),
-                _buildVeiculoDetail('Documento', veiculo['documento']),
-              ],
-            ),
-          );
-        }).toList(),
-      ),
-    ];
-  }
-
-  Widget _buildVeiculoDetail(String label, String? value) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 4),
-      child: Row(
-        children: [
-          Text('$label: ', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
-          Text(value ?? 'N/A', style: TextStyle(fontSize: 14)),
-        ],
-      ),
-    );
   }
 }

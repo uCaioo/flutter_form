@@ -27,10 +27,14 @@ class _CadastroScreenState extends State<CadastroScreen> {
   String _cidade = 'Manaus-AM';
   bool _isFieldsFilled = false;
 
-  void _limparAssinatura() {
+  void _limparAssinaturaResponsavel() {
     _signatureController.clear();
+  }
+
+  void _limparAssinaturaFiscal() {
     _signatureController2.clear();
   }
+
 
   void _navegarParaCadastroVeiculo() async {
     Uint8List? signatureBytes = await _signatureController.toPngBytes();
@@ -288,11 +292,12 @@ class _CadastroScreenState extends State<CadastroScreen> {
                             Align(
                               alignment: Alignment.topRight,
                               child: IconButton(
-                                onPressed: _limparAssinatura,
+                                onPressed: _limparAssinaturaResponsavel, // Use a função de limpeza do responsável aqui
                                 icon: Icon(Icons.delete),
                                 color: Colors.red,
                               ),
                             ),
+
                           ],
                         ),
                       ),
@@ -321,13 +326,12 @@ class _CadastroScreenState extends State<CadastroScreen> {
                             Align(
                               alignment: Alignment.topRight,
                               child: IconButton(
-                                onPressed: () {
-                                  _signatureController2.clear();
-                                },
+                                onPressed: _limparAssinaturaFiscal, // Use a função de limpeza do fiscal aqui
                                 icon: Icon(Icons.delete),
                                 color: Colors.red,
                               ),
                             ),
+
                           ],
                         ),
                       ),
