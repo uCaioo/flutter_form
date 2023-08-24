@@ -125,12 +125,19 @@ class _AdmScreenState extends State<AdmScreen> {
   Widget _buildReportEntry(Map<String, dynamic> cadastro) {
     return ListTile(
       title: Text('Nome do Responsável: ${cadastro['nomeResponsavel'] ?? 'N/A'}'),
-      subtitle: Text('Matrícula: ${cadastro['matricula'] ?? 'N/A'}'),
+      subtitle: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('Orgão: ${cadastro['para'] ?? 'N/A'}'),
+          Text('Matrícula: ${cadastro['matricula'] ?? 'N/A'}'),
+        ],
+      ),
       onTap: () {
         _showDetailsFromReport(cadastro);
       },
     );
   }
+
 
   void _showDetailsFromReport(Map<String, dynamic> data) {
     showDialog(
@@ -367,8 +374,6 @@ class _AdmScreenState extends State<AdmScreen> {
       print('Erro ao excluir permanentemente: $error');
     });
   }
-
-
 
 
 }
