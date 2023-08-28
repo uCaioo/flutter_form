@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'splash_screen.dart';
-import 'welcome_screen.dart';
 import 'select.dart'; // Importe a tela SelectScreen
 import 'agradecimento.dart'; // Importe a tela AgradecimentoScreen
 import 'package:firebase_core/firebase_core.dart';

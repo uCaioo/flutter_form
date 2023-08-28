@@ -316,6 +316,7 @@ class ConfirmacaoScreen extends StatelessWidget {
                                     final responsavelImageUrl = await uploadImageAndGetUrl(assinatura);
                                     final fiscalImageUrl = await uploadImageAndGetUrl(assinatura2);
 
+
                                     // Criar mapa de dados para enviar ao Firestore
                                     Map<String, dynamic> data = {
                                       'emissor': emissor,

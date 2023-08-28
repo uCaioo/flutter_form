@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'login.dart';
+import 'package:flutter/services.dart';
+
+
 
 class AdmScreen extends StatefulWidget {
   final String adminName;
-
   AdmScreen({required this.adminName});
 
   @override
@@ -138,7 +140,6 @@ class _AdmScreenState extends State<AdmScreen> {
     );
   }
 
-
   void _showDetailsFromReport(Map<String, dynamic> data) {
     showDialog(
       context: context,
@@ -169,8 +170,12 @@ class _AdmScreenState extends State<AdmScreen> {
                     _deleteReport(data['documentId']);
                     Navigator.of(context).pop();
                   },
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.red, // Define a cor de fundo como vermelho
+                  ),
                   child: Text('Excluir Relatório', style: TextStyle(color: Colors.white)),
                 ),
+
               ],
             ),
           ),
@@ -181,6 +186,12 @@ class _AdmScreenState extends State<AdmScreen> {
               },
               child: Text('Fechar', style: TextStyle(color: Colors.red)),
             ),
+
+            TextButton(
+              onPressed: null, // Nenhuma função associada
+              child: Text('Visualizar PDF', style: TextStyle(color: Color(0xFF43AD59))),
+            ),
+
           ],
         );
       },
@@ -334,15 +345,23 @@ class _AdmScreenState extends State<AdmScreen> {
                   _restoreFromTrash(item);
                   Navigator.of(context).pop();
                 },
+                style: ElevatedButton.styleFrom(
+                  primary: Color(0xFF43AD59), // Define a cor de fundo como #43AD59
+                ),
                 child: Text('Restaurar'),
               ),
+
               ElevatedButton(
                 onPressed: () {
                   _deleteFromTrash(item['documentId']);
                   Navigator.of(context).pop();
                 },
+                style: ElevatedButton.styleFrom(
+                  primary: Colors.red, // Define a cor de fundo como vermelho
+                ),
                 child: Text('Excluir Permanentemente'),
               ),
+
             ],
           ),
         );
@@ -374,6 +393,5 @@ class _AdmScreenState extends State<AdmScreen> {
       print('Erro ao excluir permanentemente: $error');
     });
   }
-
 
 }
